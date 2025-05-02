@@ -1,47 +1,57 @@
-# 🤖 AI-Powered Health Tracker
+# 🧠 AI-Powered Health Tracker
 
-An intelligent and accessible web application that leverages deep learning and natural language processing to identify skin diseases from images and provide helpful health guidance via an integrated chatbot.
-
-![App Screenshot](screenshot.png) <!-- Add your actual screenshot file -->
+An intelligent skin disease detection system using deep learning (MobileNetV2) and an integrated Dialogflow chatbot to provide personalized health advice and remedies. Built with Python, TensorFlow, and Google Cloud technologies.
 
 ---
 
-## 🚀 Features
+## 📌 Project Overview
 
-- 🔍 **Skin Disease Prediction** using a trained CNN model
-- 💬 **Interactive Health Chatbot** powered by Dialogflow
-- 📊 **Disease Overview Section** with symptoms and treatments
-- 🧱 **Brick-Style Progress Bar** for visual feedback
-- 🔐 **Firebase Authentication** (optional)
-- ☁️ **Firestore Storage** for storing user data (optional)
-- 🖼️ Simple and intuitive **Streamlit UI**
+This project uses image recognition to detect 9 common skin diseases and offers chatbot-based health guidance using Dialogflow. It aims to make early detection and basic healthcare more accessible and user-friendly.
 
 ---
 
-## 🧠 Supported Diseases
+## ✅ Features
 
-- Benign Tumors  
-- Eczema  
-- Tinea  
-- Psoriasis  
-- Actinic Keratosis  
-- Vitiligo  
-- Skin Cancer  
-- Warts  
-- Acne  
+- 📷 **Image-based Skin Disease Classification** using a fine-tuned MobileNetV2 model.
+- 🤖 **Dialogflow Chatbot Integration** via Google Cloud for remedies and disease details.
+- 📊 **Graphical Visualization** of training progress (loss and accuracy).
+- 🧪 **Offline & GUI Support** using Tkinter for user-friendly diagnosis.
+- 🔐 **Secure API Credential Handling** (no hardcoded keys).
+
+---
+
+## 🧬 Supported Diseases
+
+| Class Index | Disease Name          |
+|-------------|------------------------|
+| 0           | Benign Tumors         |
+| 1           | Eczema                |
+| 2           | Tinea                 |
+| 3           | Psoriasis             |
+| 4           | Actinic Keratosis     |
+| 5           | Vitiligo              |
+| 6           | Skin Cancer           |
+| 7           | Warts                 |
+| 8           | Acne                  |
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend/UI:** Streamlit
-- **Model:** TensorFlow / Keras (CNN model for classification)
-- **Chatbot:** Dialogflow
-- **Database & Auth (optional):** Firebase
+- **Frontend:** Tkinter GUI
+- **AI/ML:** TensorFlow, Keras, MobileNetV2
 - **Visualization:** Matplotlib, Seaborn
-- **Language:** Python
+- **Chatbot:** Dialogflow ES
+- **Cloud:** Google Cloud Console
+- **Languages:** Python 3
 
 ---
 
-## 📁 Project Structure
+## 🔄 Workflow
 
+```mermaid
+graph LR
+A[User uploads skin image] --> B[MobileNetV2 Model]
+B --> C[Predicted Disease]
+C --> D[Dialogflow Chatbot]
+D --> E[Remedies & Information Shown in GUI]
