@@ -49,9 +49,48 @@ This project uses image recognition to detect 9 common skin diseases and offers 
 
 ## 🔄 Workflow
 
-```mermaid
+```
 graph LR
 A[User uploads skin image] --> B[MobileNetV2 Model]
 B --> C[Predicted Disease]
 C --> D[Dialogflow Chatbot]
 D --> E[Remedies & Information Shown in GUI]
+
+## 🚀 Demo Instructions
+
+Follow these steps to try the AI-Powered Health Tracker:
+
+### 🔧 Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/ai-health-tracker.git
+   cd ai-health-tracker
+
+📦 Install Dependencies
+pip install -r requirements.txt
+
+Make sure your requirements.txt includes libraries like:
+tensorflow
+numpy
+pillow
+matplotlib
+firebase-admin
+google-cloud-dialogflow
+streamlit
+
+🔐 Add Your Dialogflow Credentials
+To enable chatbot functionality:
+
+Go to your Google Cloud Console.
+
+Navigate to your Dialogflow project.
+
+Create a service account key with Dialogflow permissions.
+
+Download the credentials.json file.
+
+Place the file in your project root directory.
+
+Set the environment variable:
+
