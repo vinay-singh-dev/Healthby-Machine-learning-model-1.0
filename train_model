@@ -1,0 +1,103 @@
+import tensorflow as tf
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras import layers, models
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from sklearn.utils.class_weight import compute_class_weight
+import numpy as np
+import os
+
+# Define your paths
+train_dir = "C:/Users/Vinay Singh Baghel/OneDrive/Desktop/AI_Health_Tracker/archive/SkinDisease/SkinDisease/train"
+test_dir = "C:/Users/Vinay Singh Baghel/OneDrive/Desktop/AI_Health_Tracker/archive/SkinDisease/SkinDisease/test"
+
+# Only use top 10 class folders
+top_10_classes = [
+     "Benign Tumors", "Eczema", "Tinea", "Psoriasis",
+    "Actinic Keratosis", "Vitiligo", "Skin Cancer", "Warts", "Acne"
+]
+
+# Preprocessing and augmentation
+train_datagen = ImageDataGenerator(
+    rescale=1.0/255,
+    rotation_range=30,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest'
+)
+
+test_datagen = ImageDataGenerator(rescale=1.0/255)
+
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=(224, 224),
+    batch_size=32,
+    class_mode='categorical',
+    classes=top_10_classes
+)
+
+test_generator = test_datagen.flow_from_directory(
+    test_dir,
+    target_size=(224, 224),
+    batch_size=32,
+    class_mode='categorical',
+    classes=top_10_classes
+)
+
+# Compute class weights
+class_weights = compute_class_weight(
+    class_weight='balanced',
+    classes=np.unique(train_generator.classes),
+    y=train_generator.classes
+)
+class_weights = dict(enumerate(class_weights))
+
+# Load MobileNetV2 and unfreeze last 30 layers
+base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+base_model.trainable = True
+
+for layer in base_model.layers[:-30]:
+    layer.trainable = False
+
+# Build model
+model = models.Sequential([
+    base_model,
+    layers.GlobalAveragePooling2D(),
+    layers.Dense(512, activation='relu'),
+    layers.Dropout(0.3),
+    layers.Dense(len(top_10_classes), activation='softmax')
+])
+
+model.compile(optimizer=Adam(learning_rate=1e-4), loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Callbacks: EarlyStopping and ModelCheckpoint
+early_stop = EarlyStopping(
+    monitor='val_loss',
+    patience=3,
+    restore_best_weights=True
+)
+
+checkpoint = ModelCheckpoint(
+    "best_skin_model.keras",
+    monitor='val_loss',
+    save_best_only=True,
+    verbose=1
+)
+
+# Train with callbacks
+history = model.fit(
+    train_generator,
+    steps_per_epoch=train_generator.samples // train_generator.batch_size,
+    epochs=30,
+    validation_data=test_generator,
+    validation_steps=test_generator.samples // test_generator.batch_size,
+    class_weight=class_weights,
+    callbacks=[early_stop, checkpoint]
+)
+
+# Optional: Save final model (not best, just final state)
+model.save("final_skin_model.keras")

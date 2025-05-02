@@ -1,0 +1,96 @@
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from ai_model import diagnose_image  # Import the image diagnosis function
+from chatbot import talk_to_bot  # Import the chatbot interaction function
+
+# Function to handle image diagnosis
+def diagnose_image_input():
+    # Clear previous label text
+    label_response.config(text="Processing image...")
+
+    # Open file dialog to select an image
+    file_path = filedialog.askopenfilename(title="Select an Image", filetypes=[("Image Files", "*.png;*.jpg;*.jpeg")])
+
+    if file_path:  # If the user selects an image
+        try:
+            # Step 1: Get Diagnosis from the image
+            diagnosis = diagnose_image(file_path)
+
+            # Step 2: Extract disease name (remove confidence from diagnosis if present)
+            clean_diagnosis = diagnosis.split('(')[0].strip()
+
+            # Step 3: Show the diagnosis in the label
+            label_response.config(text=f"🤖 Disease: {diagnosis}")
+
+            # Step 4: Print the predicted class in the terminal (without confidence)
+            print(f"✅ Predicted Class: {clean_diagnosis}")
+
+            # Step 5: Ask the chatbot about the diagnosis
+            response = talk_to_bot(f"Tell me more about {clean_diagnosis}")
+            label_response.config(text=f"🤖 Disease: {diagnosis}\n💬 Chatbot: {response}")
+        except Exception as e:
+            label_response.config(text=f"Error: {str(e)}")
+            print(f"Error: {str(e)}")
+
+# Function to handle text input diagnosis
+def ask_text_input():
+    # Clear previous label text
+    label_response.config(text="Processing...")
+
+    # Ask the user for symptoms
+    user_input = entry.get()
+
+    if user_input:  # If the user typed something
+        try:
+            # Send the input to the chatbot for diagnosis
+            response = talk_to_bot(user_input)
+
+            # Show the chatbot response in the label
+            label_response.config(text=f"💬 {response}")
+        except Exception as e:
+            label_response.config(text=f"Error: {str(e)}")
+            print(f"Error: {str(e)}")
+    else:
+        label_response.config(text="💬 Please enter some symptoms.")
+
+# Set up the GUI
+root = tk.Tk()
+root.title("AI Health Tracker")
+root.geometry("500x600")  # Set the window size
+root.config(bg="#f1f1f1")  # Set the background color
+
+# Frame for the header
+frame_header = tk.Frame(root, bg="#4C7BFF", pady=20)
+frame_header.pack(fill="x")
+
+header_label = tk.Label(frame_header, text="AI Health Tracker", font=("Arial", 24, "bold"), fg="white", bg="#4C7BFF")
+header_label.pack()
+
+# Frame for the content
+frame_content = tk.Frame(root, bg="#f1f1f1")
+frame_content.pack(pady=20)
+
+# Label to display the chatbot's response or diagnosis
+label_response = tk.Label(frame_content, text="Chatbot Response", wraplength=400, font=("Arial", 12), bg="#f1f1f1")
+label_response.pack(pady=10)
+
+# Entry widget for text input (symptoms)
+entry = tk.Entry(frame_content, width=50, font=("Arial", 12))
+entry.pack(pady=10)
+
+# Button for image diagnosis
+button_image = tk.Button(frame_content, text="Image Diagnosis", command=diagnose_image_input, font=("Arial", 14), bg="#4C7BFF", fg="white", relief="flat", padx=20, pady=10)
+button_image.pack(pady=10)
+
+# Button for text input diagnosis
+button_text = tk.Button(frame_content, text="Text Input Diagnosis", command=ask_text_input, font=("Arial", 14), bg="#4C7BFF", fg="white", relief="flat", padx=20, pady=10)
+button_text.pack(pady=10)
+
+# Add some padding to the bottom of the frame
+frame_content.pack(pady=30)
+
+# Set focus on the entry widget to ensure typing is possible
+entry.focus()
+
+# Start the GUI loop
+root.mainloop()

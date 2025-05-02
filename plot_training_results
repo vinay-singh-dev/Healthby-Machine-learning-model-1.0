@@ -1,0 +1,30 @@
+# plot_training_results.py
+import matplotlib.pyplot as plt
+import pickle
+
+# Load history object if saved (optional)
+with open('history.pickle', 'rb') as f:
+    history = pickle.load(f)
+
+# Plot training & validation accuracy values
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('Model Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend(['Train', 'Validation'], loc='upper left')
+plt.show()
+
+# Plot training & validation loss values
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Model Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend(['Train', 'Validation'], loc='upper left')
+plt.show()
+import pickle
+
+# Save the history object to a file
+with open('history.pickle', 'wb') as f:
+    pickle.dump(history, f)
