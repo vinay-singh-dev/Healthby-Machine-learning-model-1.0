@@ -1,0 +1,7 @@
+tensorflow
+opencv-python
+google-cloud-dialogflow
+matplotlib
+seaborn
+numpy
+pandas
