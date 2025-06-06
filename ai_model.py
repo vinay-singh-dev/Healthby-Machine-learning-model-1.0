@@ -3,14 +3,14 @@ import numpy as np
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import load_model
 
-# Load the model safely
+# model loading 
 try:
     model = load_model("fine_tuned_skin_model.h5")
 except Exception as e:
     print(f"❌ Error loading model: {e}")
     model = None  # Set to None to avoid crash if model fails to load
 
-# classes in which the model will be trained
+# disease classess for model training
 class_indices = {
     0: 'Benign Tumors',
     1: 'Eczema',
