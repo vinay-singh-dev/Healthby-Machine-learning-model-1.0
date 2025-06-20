@@ -28,3 +28,4 @@ import pickle
 # Save the history object to a file
 with open('history.pickle', 'wb') as f:
     pickle.dump(history, f)
+
